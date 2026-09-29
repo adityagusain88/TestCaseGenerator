@@ -5,13 +5,17 @@ from dotenv import load_dotenv
 import streamlit as st
 load_dotenv()
 
-# On Streamlit Cloud the key comes from st.secrets instead of a local .env file.
-if "OPENAI_API_KEY" in st.secrets:
-    os.environ["OPENAI_API_KEY"] = st.secrets["OPENAI_API_KEY"]
-    os.environ["LANGSMITH_TRACING"] = st.secrets["LANGSMITH_TRACING"]
-    os.environ["LANGSMITH_API_KEY"] = st.secrets["LANGSMITH_API_KEY"]
-    os.environ["LANGSMITH_PROJECT"] = st.secrets["LANGSMITH_PROJECT"]
-    os.environ["TAVILY_API_KEY"] = st.secrets["TAVILY_API_KEY"]
+# On Streamlit Cloud the keys come from st.secrets instead of a local .env file.
+for _key in (
+    "OPENAI_API_KEY",
+    "LANGSMITH_TRACING",
+    "LANGSMITH_API_KEY",
+    "LANGSMITH_PROJECT",
+    "TAVILY_API_KEY",
+):
+    if _key in st.secrets:
+        # TOML values may be booleans; os.environ only accepts strings.
+        os.environ[_key] = str(st.secrets[_key])
 
 if not os.environ.get("OPENAI_API_KEY"):
     st.error(
