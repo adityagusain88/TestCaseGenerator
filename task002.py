@@ -8,6 +8,10 @@ load_dotenv()
 # On Streamlit Cloud the key comes from st.secrets instead of a local .env file.
 if "OPENAI_API_KEY" in st.secrets:
     os.environ["OPENAI_API_KEY"] = st.secrets["OPENAI_API_KEY"]
+    os.environ["LANGSMITH_TRACING"] = st.secrets["LANGSMITH_TRACING"]
+    os.environ["LANGSMITH_API_KEY"] = st.secrets["LANGSMITH_API_KEY"]
+    os.environ["LANGSMITH_PROJECT"] = st.secrets["LANGSMITH_PROJECT"]
+    os.environ["TAVILY_API_KEY"] = st.secrets["TAVILY_API_KEY"]
 
 if not os.environ.get("OPENAI_API_KEY"):
     st.error(
