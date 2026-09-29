@@ -1,6 +1,5 @@
 import os
 
-from langchain.agents import create_agent
 from dotenv import load_dotenv
 import streamlit as st
 load_dotenv()
@@ -11,11 +10,19 @@ for _key in (
     "LANGSMITH_TRACING",
     "LANGSMITH_API_KEY",
     "LANGSMITH_PROJECT",
+    "LANGSMITH_ENDPOINT",
     "TAVILY_API_KEY",
 ):
     if _key in st.secrets:
         # TOML values may be booleans; os.environ only accepts strings.
         os.environ[_key] = str(st.secrets[_key])
+
+# The LangSmith SDK compares this value against the literal "true".
+if os.environ.get("LANGSMITH_TRACING"):
+    os.environ["LANGSMITH_TRACING"] = os.environ["LANGSMITH_TRACING"].strip().lower()
+
+# Imported after the environment is populated so tracing is picked up.
+from langchain.agents import create_agent  # noqa: E402
 
 if not os.environ.get("OPENAI_API_KEY"):
     st.error(
