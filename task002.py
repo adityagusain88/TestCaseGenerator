@@ -9,6 +9,13 @@ load_dotenv()
 if "OPENAI_API_KEY" in st.secrets:
     os.environ["OPENAI_API_KEY"] = st.secrets["OPENAI_API_KEY"]
 
+if not os.environ.get("OPENAI_API_KEY"):
+    st.error(
+        "OPENAI_API_KEY is not configured. On Streamlit Cloud add it under "
+        "Manage app -> Settings -> Secrets, locally add it to your .env file."
+    )
+    st.stop()
+
 SYSTEM_PROMPT = """You are a Senior QA Engineer with over 12 years of experience in manual and
 automation testing across web, mobile and API applications.
 You write precise, unambiguous and traceable test cases that follow ISTQB best practices.
